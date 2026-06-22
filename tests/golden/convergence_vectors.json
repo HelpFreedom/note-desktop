@@ -1,0 +1,348 @@
+{
+ "scenarios": [
+  {
+   "name": "lww_concurrent_put",
+   "ops": [
+    {
+     "op_id": "aaaaaaaaaaaaaaaa:1",
+     "device_id": "aaaaaaaaaaaaaaaa",
+     "lamport": 1,
+     "wall": "2026-01-01T00:00:02.000000+00:00",
+     "kind": "note.put",
+     "entity_id": "X",
+     "payload": {
+      "id": "X",
+      "folder_id": "F",
+      "kind": "text",
+      "html": "<p>A</p>",
+      "plaintext": "A",
+      "caption_html": "",
+      "attachments": [],
+      "date_tag": null,
+      "created": "2026-01-01T00:00:00.000000+00:00",
+      "modified": "2026-01-01T00:00:02.000000+00:00"
+     }
+    },
+    {
+     "op_id": "bbbbbbbbbbbbbbbb:1",
+     "device_id": "bbbbbbbbbbbbbbbb",
+     "lamport": 1,
+     "wall": "2026-01-01T00:00:04.000000+00:00",
+     "kind": "note.put",
+     "entity_id": "X",
+     "payload": {
+      "id": "X",
+      "folder_id": "F",
+      "kind": "text",
+      "html": "<p>B</p>",
+      "plaintext": "B",
+      "caption_html": "",
+      "attachments": [],
+      "date_tag": null,
+      "created": "2026-01-01T00:00:00.000000+00:00",
+      "modified": "2026-01-01T00:00:04.000000+00:00"
+     }
+    }
+   ],
+   "expected": {
+    "X": {
+     "present": true,
+     "plaintext": "B"
+    }
+   }
+  },
+  {
+   "name": "del_beats_older_put",
+   "ops": [
+    {
+     "op_id": "aaaaaaaaaaaaaaaa:1",
+     "device_id": "aaaaaaaaaaaaaaaa",
+     "lamport": 1,
+     "wall": "2026-01-01T00:00:02.000000+00:00",
+     "kind": "note.put",
+     "entity_id": "X",
+     "payload": {
+      "id": "X",
+      "folder_id": "F",
+      "kind": "text",
+      "html": "<p>A</p>",
+      "plaintext": "A",
+      "caption_html": "",
+      "attachments": [],
+      "date_tag": null,
+      "created": "2026-01-01T00:00:00.000000+00:00",
+      "modified": "2026-01-01T00:00:02.000000+00:00"
+     }
+    },
+    {
+     "op_id": "bbbbbbbbbbbbbbbb:2",
+     "device_id": "bbbbbbbbbbbbbbbb",
+     "lamport": 2,
+     "wall": "2026-01-01T00:00:04.000000+00:00",
+     "kind": "note.del",
+     "entity_id": "X",
+     "payload": null
+    }
+   ],
+   "expected": {
+    "X": {
+     "present": false
+    }
+   }
+  },
+  {
+   "name": "put_after_del_stays_deleted",
+   "ops": [
+    {
+     "op_id": "aaaaaaaaaaaaaaaa:1",
+     "device_id": "aaaaaaaaaaaaaaaa",
+     "lamport": 1,
+     "wall": "2026-01-01T00:00:02.000000+00:00",
+     "kind": "note.del",
+     "entity_id": "X",
+     "payload": null
+    },
+    {
+     "op_id": "bbbbbbbbbbbbbbbb:2",
+     "device_id": "bbbbbbbbbbbbbbbb",
+     "lamport": 2,
+     "wall": "2026-01-01T00:00:04.000000+00:00",
+     "kind": "note.put",
+     "entity_id": "X",
+     "payload": {
+      "id": "X",
+      "folder_id": "F",
+      "kind": "text",
+      "html": "<p>R</p>",
+      "plaintext": "R",
+      "caption_html": "",
+      "attachments": [],
+      "date_tag": null,
+      "created": "2026-01-01T00:00:00.000000+00:00",
+      "modified": "2026-01-01T00:00:04.000000+00:00"
+     }
+    }
+   ],
+   "expected": {
+    "X": {
+     "present": false
+    }
+   }
+  },
+  {
+   "name": "stale_put_suppressed_by_del",
+   "ops": [
+    {
+     "op_id": "aaaaaaaaaaaaaaaa:2",
+     "device_id": "aaaaaaaaaaaaaaaa",
+     "lamport": 2,
+     "wall": "2026-01-01T00:00:04.000000+00:00",
+     "kind": "note.del",
+     "entity_id": "X",
+     "payload": null
+    },
+    {
+     "op_id": "bbbbbbbbbbbbbbbb:1",
+     "device_id": "bbbbbbbbbbbbbbbb",
+     "lamport": 1,
+     "wall": "2026-01-01T00:00:02.000000+00:00",
+     "kind": "note.put",
+     "entity_id": "X",
+     "payload": {
+      "id": "X",
+      "folder_id": "F",
+      "kind": "text",
+      "html": "<p>stale</p>",
+      "plaintext": "stale",
+      "caption_html": "",
+      "attachments": [],
+      "date_tag": null,
+      "created": "2026-01-01T00:00:00.000000+00:00",
+      "modified": "2026-01-01T00:00:02.000000+00:00"
+     }
+    }
+   ],
+   "expected": {
+    "X": {
+     "present": false
+    }
+   }
+  },
+  {
+   "name": "tie_lamport_put_still_suppressed",
+   "ops": [
+    {
+     "op_id": "aaaaaaaaaaaaaaaa:10",
+     "device_id": "aaaaaaaaaaaaaaaa",
+     "lamport": 10,
+     "wall": "2026-06-01T00:00:00.000000+00:00",
+     "kind": "note.del",
+     "entity_id": "X",
+     "payload": null
+    },
+    {
+     "op_id": "bbbbbbbbbbbbbbbb:20",
+     "device_id": "bbbbbbbbbbbbbbbb",
+     "lamport": 20,
+     "wall": "2026-06-01T00:00:00.000000+00:00",
+     "kind": "note.put",
+     "entity_id": "X",
+     "payload": {
+      "id": "X",
+      "folder_id": "F",
+      "kind": "text",
+      "html": "<p>hi</p>",
+      "plaintext": "hi",
+      "caption_html": "",
+      "attachments": [],
+      "date_tag": null,
+      "created": "2026-01-01T00:00:00.000000+00:00",
+      "modified": "2026-06-01T00:00:00.000000+00:00"
+     }
+    }
+   ],
+   "expected": {
+    "X": {
+     "present": false
+    }
+   }
+  },
+  {
+   "name": "tie_lamport_del_wins",
+   "ops": [
+    {
+     "op_id": "aaaaaaaaaaaaaaaa:20",
+     "device_id": "aaaaaaaaaaaaaaaa",
+     "lamport": 20,
+     "wall": "2026-06-01T00:00:00.000000+00:00",
+     "kind": "note.del",
+     "entity_id": "X",
+     "payload": null
+    },
+    {
+     "op_id": "bbbbbbbbbbbbbbbb:10",
+     "device_id": "bbbbbbbbbbbbbbbb",
+     "lamport": 10,
+     "wall": "2026-06-01T00:00:00.000000+00:00",
+     "kind": "note.put",
+     "entity_id": "X",
+     "payload": {
+      "id": "X",
+      "folder_id": "F",
+      "kind": "text",
+      "html": "<p>x</p>",
+      "plaintext": "x",
+      "caption_html": "",
+      "attachments": [],
+      "date_tag": null,
+      "created": "2026-01-01T00:00:00.000000+00:00",
+      "modified": "2026-06-01T00:00:00.000000+00:00"
+     }
+    }
+   ],
+   "expected": {
+    "X": {
+     "present": false
+    }
+   }
+  },
+  {
+   "name": "tie_device_del_wins",
+   "ops": [
+    {
+     "op_id": "zzzzzzzzzzzzzzzz:10",
+     "device_id": "zzzzzzzzzzzzzzzz",
+     "lamport": 10,
+     "wall": "2026-06-01T00:00:00.000000+00:00",
+     "kind": "note.del",
+     "entity_id": "X",
+     "payload": null
+    },
+    {
+     "op_id": "aaaaaaaaaaaaaaaa:10",
+     "device_id": "aaaaaaaaaaaaaaaa",
+     "lamport": 10,
+     "wall": "2026-06-01T00:00:00.000000+00:00",
+     "kind": "note.put",
+     "entity_id": "X",
+     "payload": {
+      "id": "X",
+      "folder_id": "F",
+      "kind": "text",
+      "html": "<p>x</p>",
+      "plaintext": "x",
+      "caption_html": "",
+      "attachments": [],
+      "date_tag": null,
+      "created": "2026-01-01T00:00:00.000000+00:00",
+      "modified": "2026-06-01T00:00:00.000000+00:00"
+     }
+    }
+   ],
+   "expected": {
+    "X": {
+     "present": false
+    }
+   }
+  },
+  {
+   "name": "put_del_newerput_stays_deleted",
+   "ops": [
+    {
+     "op_id": "aaaaaaaaaaaaaaaa:1",
+     "device_id": "aaaaaaaaaaaaaaaa",
+     "lamport": 1,
+     "wall": "2026-01-01T00:00:01.000000+00:00",
+     "kind": "note.put",
+     "entity_id": "X",
+     "payload": {
+      "id": "X",
+      "folder_id": "F",
+      "kind": "text",
+      "html": "<p>v1</p>",
+      "plaintext": "v1",
+      "caption_html": "",
+      "attachments": [],
+      "date_tag": null,
+      "created": "2026-01-01T00:00:00.000000+00:00",
+      "modified": "2026-01-01T00:00:01.000000+00:00"
+     }
+    },
+    {
+     "op_id": "aaaaaaaaaaaaaaaa:2",
+     "device_id": "aaaaaaaaaaaaaaaa",
+     "lamport": 2,
+     "wall": "2026-01-01T00:00:02.000000+00:00",
+     "kind": "note.del",
+     "entity_id": "X",
+     "payload": null
+    },
+    {
+     "op_id": "bbbbbbbbbbbbbbbb:3",
+     "device_id": "bbbbbbbbbbbbbbbb",
+     "lamport": 3,
+     "wall": "2026-01-01T00:00:03.000000+00:00",
+     "kind": "note.put",
+     "entity_id": "X",
+     "payload": {
+      "id": "X",
+      "folder_id": "F",
+      "kind": "text",
+      "html": "<p>v3</p>",
+      "plaintext": "v3",
+      "caption_html": "",
+      "attachments": [],
+      "date_tag": null,
+      "created": "2026-01-01T00:00:00.000000+00:00",
+      "modified": "2026-01-01T00:00:03.000000+00:00"
+     }
+    }
+   ],
+   "expected": {
+    "X": {
+     "present": false
+    }
+   }
+  }
+ ]
+}

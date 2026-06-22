@@ -1,0 +1,10 @@
+# PySide6-Essentials — основной GUI; Addons нужен ради QtMultimedia
+# (автоплей видео в превью и полноэкранный просмотр).
+PySide6-Essentials==6.9.3
+PySide6-Addons==6.9.3
+rapidfuzz==3.10.1
+python-dateutil==2.9.0.post0
+# --- синхронизация (опционально включается в настройках) ---
+cryptography==49.0.0   # ключ устройства, самоподписанный cert, mutual-TLS
+zeroconf==0.149.16     # mDNS-обнаружение пиров в локальной сети
+segno==1.6.6           # генерация QR для сопряжения

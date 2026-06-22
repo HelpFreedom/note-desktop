@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Qt / runtime
+*.log
+
+# Local app data / vault (NEVER commit user data)
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+
+# Test artifacts (cross-language conformance, regenerated)
+tests/golden/dart_out.json
+tests/golden/conv_out.json
+
+# Editor / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Local machine config
+.claude/
