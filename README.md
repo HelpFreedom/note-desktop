@@ -1,6 +1,10 @@
-# QtNotes Desktop
+# Notes Desktop
 
 [English version](README.en.md)
+
+![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)
+
+![screenshot](promo.png)
 
 Настольное приложение для заметок в стиле Telegram Desktop на **PySide6 / Qt 6**
 (Python 3.11). Папки работают как чаты, заметки — как сообщения: узкая колонка папок
