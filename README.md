@@ -1,6 +1,6 @@
 # Notes Desktop
 
-[English version](README.en.md)
+[English version](README.en.md) | [Подробно в видео](https://www.youtube.com/watch?v=72BAJnBwFic)
 
 ![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)
 
